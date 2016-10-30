@@ -1,5 +1,6 @@
 /*Amigos, podemos usar este código y ya solo lo modificamos para las caracteristicas qu pide el profe, está en C, y yá es solo modificar
-y/o agregar variables, funciones, etc., cualquier cosa por correo o whats, avisenme si están de acuerdo para empezar sobre este código */
+y/o agregar variables, funciones, etc., cualquier cosa por correo o whats, avisenme si están de acuerdo para empezar sobre este código
+ma.millan@live.com*/
 
 
 #include <stdio.h>
