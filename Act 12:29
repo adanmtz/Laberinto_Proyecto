@@ -1,8 +1,8 @@
-/*No muestra bien el laberinto en cuanto a los 1 que representan pared, error desde la funcion definirMatriz */
+/*Ya muestra el laberinto como tal, ya posiciona inicialmente desde teclado, ahora es hacer que recorra el laberinto a una salida
+y ya al final vemos lo de escribir las coordenadas a un archivo de salida*/
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>
 #include <conio.h>
 #include <stdbool.h>
 #define ARRIBA 0
@@ -16,13 +16,13 @@ void dimensionaMatriz();
 void RecorrerLaberinto();
 
 int **mat; // Matriz dinamica que guarda los datos del archivo.            
-//int m2[100][100];   // Esta matriz mostrara la solucion, aun no la uso
+
 int i, j, ii;
 int fil,col; // filas y columnas del laberinto            
 int fp,cp; // coordenadas del jugador
 int xfin,yfin; // coordenadas de la salida o meta
 int xini,yini; // coordenadas iniciales del jugador
-int direccion=0; // El jugador inicia viendo hacia arriba
+int direccion=ARRIBA; // El jugador inicia viendo hacia arriba
 int espacios; // Cuenta los espacios que hay en un laberitno
 bool ya=false; // Indica si ya pasamos por ese lugar
 int arriba, abajo, izquierda, derecha; // Aqui guardamos la informacion de la matriz de las 
@@ -35,7 +35,7 @@ void dimensionaMatriz(char ruta[]) {
     char caracter;
     int codigo;
     
-    archivo=fopen(ruta,"r"); // abrimos el archivo en modo lectura de texto("rt")
+    archivo=fopen(ruta,"r"); // abrimos el archivo en modo lectura de texto("r")
     if (archivo==NULL) { // En caso de que el archivo no exista o que este mal el nombre
        printf("Error en lectura de archivo\n");
        system("pause");
@@ -82,26 +82,26 @@ void leerArchivo(char ruta[]) {
            }
                
        }
-    
+    }     
     fclose(archivo);      
 }
-}
+
 void MuestraLaberinto() {
-     // En esta funcion las paredes se muestran como asteriscos "*", el jugador como "J" y la meta como "M"
+     // En esta funcion las paredes se muestran como "1", el inicio como "I" y la salida como "F"
     system("cls");
     for (i=0;i<fil;i++) {
         for (ii=0;ii<col;ii++) {
            if (mat[i][ii]==1) printf ("1 ");
-           else if (i==xfin && ii==yfin) printf ("M ");
-           else if (i==fp && ii==cp) printf ("J ");
+           else if (i==xfin && ii==yfin) printf ("F ");
+           else if (i==xini && ii==yini) printf ("I ");
+           //f  e ifl(mat[i][ii]==4) printf (". "); // Es por donde ya paso el jugador
            else printf ("0 ");
         }
     printf ("\n");
     }
-    //printf ("Direccion %d, arriba %d, abajo %d, derecha %d, izquierda %d\n",direccion,arriba,abajo,derecha,izquierda); // debug
     system("pause"); // esperamos que el usuario presione una tecla
 }
- 
+
 void RecorrerLaberinto() {
     int old_fp,old_cp; // Las usaremos para poner un espacio en donde estaba el jugador
  
@@ -137,7 +137,7 @@ void RecorrerLaberinto() {
          else if (derecha==0) direccion=DERECHA;// si no hay pared a la derecha giramos 
          else direccion=ARRIBA; // ultima opcion arriba
       }
-      else if (direccion==2){ // volteando a la izquierda
+      else if (direccion==2){ // volteando al oeste
          if (izquierda==0 && arriba==1) {}// si hay pared arriba y a la izq. no, avanzamos             
          else if (arriba==0) direccion=ARRIBA;// si no hay pared arriba giramos a la derecha,
          else if (abajo==0) direccion=ABAJO;// si no hay pared abajo giramos 
@@ -192,3 +192,4 @@ int main() {
     system("pause");
     return 0;
     }
+
