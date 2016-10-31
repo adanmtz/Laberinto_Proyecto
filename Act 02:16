@@ -1,5 +1,6 @@
-/*Ya muestra el laberinto como tal, ya posiciona inicialmente desde teclado, ahora es hacer que recorra el laberinto a una salida
-y ya al final vemos lo de escribir las coordenadas a un archivo de salida*/
+/*Ya se crea el archivo de salida para que muestre las coordendas, sigue faltando la función que realice el recorrido para una salida 
+del laberinto y así se pueda escribir en el archivo de salida las coordenadas, solo falta eso, que recorra un camino desde el inicio
+a una salida del laberinto.*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -64,7 +65,7 @@ void leerArchivo(char ruta[]) {
     FILE *archivo;
     char caracter;      
     
-    archivo=fopen(ruta,"r"); // abrimos el archivo "laberinto.txt" en modo lectura de texto("rt"
+    archivo=fopen(ruta,"r"); // abrimos el archivo "laberinto.txt" en modo lectura de texto("rt")
     if (archivo==NULL) { // En caso de que el archivo no exista o que este mal el nombre
        printf("Error en lectura de archivo\n");
        system("pause");
@@ -92,8 +93,8 @@ void MuestraLaberinto() {
     for (i=0;i<fil;i++) {
         for (ii=0;ii<col;ii++) {
            if (mat[i][ii]==1) printf ("1 ");
-           else if (i==xfin && ii==yfin) printf ("F ");
-           else if (i==xini && ii==yini) printf ("I ");
+           else if (i==xfin && ii==yfin) printf ("M ");
+           else if (i==xini && ii==yini) printf ("X ");
            //f  e ifl(mat[i][ii]==4) printf (". "); // Es por donde ya paso el jugador
            else printf ("0 ");
         }
@@ -103,9 +104,12 @@ void MuestraLaberinto() {
 }
 
 void RecorrerLaberinto() {
+	
+	FILE *salida;
     int old_fp,old_cp; // Las usaremos para poner un espacio en donde estaba el jugador
  
-      old_fp=fp; old_cp=cp; // Guardamos las coordenadas del jugador, para colocar un espacio cuando se mueva                   
+ 	  salida=fopen("coordenadas.txt","w");
+	  old_fp=fp; old_cp=cp; // Guardamos las coordenadas del jugador, para colocar un espacio cuando se mueva                   
  
       arriba=mat[fp-1][cp];
       abajo=mat[fp+1][cp];
@@ -113,10 +117,10 @@ void RecorrerLaberinto() {
       izquierda=mat[fp][cp-1];
  
       // checamos si la meta esta junto al jugador
-      if (derecha==3) direccion=DERECHA;
-      else if (izquierda==3) direccion=IZQUIERDA;
-      else if (arriba==3) direccion=ARRIBA;
-      else if (abajo==3) direccion=ABAJO;
+      if (derecha=='\0') direccion=DERECHA;
+      else if (izquierda=='\0') direccion=IZQUIERDA;
+      else if (arriba=='\0') direccion=ARRIBA;
+      else if (abajo=='\0') direccion=ABAJO;
  
       // Si no estamos junto a la meta, avanzamos
       else if (direccion==ARRIBA){ // volteando al norte
@@ -164,8 +168,10 @@ void RecorrerLaberinto() {
             fp++; // Actualizamos coordenadas del jugador           
         break;
       }
+  	fclose(salida); 
 }
  
+
 int main() {
 	
 	char arch[]=  "laberinto.txt"; //Nombre del archivo que tiene la informacion del laberinto
@@ -174,12 +180,12 @@ int main() {
     leerArchivo(arch); // Leemos archivo de texto con la informacion del laberinto    
 
 	printf("Ingrese la coordenada X donde se emepzar%c el laberinto: ", 160);
-    scanf("%d", &xini);
-    printf("Ingrese la coordenada Y donde se emepzar%c el laberinto: ", 160);
     scanf("%d", &yini);
+    printf("Ingrese la coordenada Y donde se emepzar%c el laberinto: ", 160);
+    scanf("%d", &xini);
     printf ("\n");
     
-   	fp=yini;cp=xini;// xini y yini son los valores iniciales de las coordenadas del jugador no  cambian
+   	fp=xini;cp=yini;// xini y yini son los valores iniciales de las coordenadas del jugador no  cambian
                // fp Y cp, si van cambiando en el transcurso del programa
 	
     MuestraLaberinto();
@@ -192,4 +198,3 @@ int main() {
     system("pause");
     return 0;
     }
-
